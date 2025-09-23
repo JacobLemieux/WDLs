@@ -1,7 +1,5 @@
 version: 1.2
 workflows:
-   - name: "bwa_align_ref"
-     subclass: WDL
-     primaryDescriptorPath: wdl/mapbwa.wdl 
-     readMePath: wdl/README.md
-     topic: genome alignment
+  - name: map_fastq_to_reference
+    subclass: WDL
+    primaryDescriptorPath: /wdl/mapbwa.wdl
