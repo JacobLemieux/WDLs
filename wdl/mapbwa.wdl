@@ -96,7 +96,7 @@ task align_reads {
   }
 
   runtime {
-    docker: "biocontainers/bwa:v0.7.17-4-deb_cv1"
+    docker: "quay.io/biocontainers/bwa:0.7.19--h577a1d6_1"
     cpu: bwa_threads
   }
 }
@@ -119,7 +119,7 @@ task sort_and_index_bam {
   }
 
   runtime {
-    docker: "biocontainers/samtools:v1.18-2-deb_cv1"
+    docker: "quay.io/biocontainers/samtools:1.22.1--h96c455f_0"
     cpu: samtools_threads
   }
 }
