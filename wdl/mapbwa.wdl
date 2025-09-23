@@ -66,7 +66,7 @@ task index_reference {
   }
 
   runtime {
-    docker: "biocontainers/bwa:v0.7.17-4-deb_cv1"
+    docker: "quay.io/biocontainers/bwa:0.7.19--h577a1d6_1"
     cpu: bwa_threads
   }
 }
