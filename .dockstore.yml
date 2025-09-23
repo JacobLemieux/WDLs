@@ -1,10 +1,9 @@
 version: 1.2
 workflows:
-  - subclass: <WDL>
-    primaryDescriptorPath: 
-    testParameterFiles:
-    readMePath: README.md
+  - subclass: WDL
+    primaryDescriptorPath: wdl/mapbwa.wdl 
+    readMePath: wdl/README.md
     authors:
       - name: Jacob Lemieux
         email: lemieux@broadinstitute.org
-    topic: bwa
+    topic: genome alignment
