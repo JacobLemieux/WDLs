@@ -6,70 +6,29 @@ workflow map_fastq_to_reference {
     File fastq_read1
     File? fastq_read2
     String sample_name
+    File bwa_index_amb
+    File bwa_index_ann
+    File bwa_index_bwt
+    File bwa_index_pac
+    File bwa_index_sa
     Int bwa_threads = 8
     Int samtools_threads = 4
   }
 
-  # Task 1: Index the reference genome
-  # This task only needs to be run once for a given reference.
-  call index_reference {
-    input:
-      reference_fasta = reference_fasta,
-      bwa_threads = bwa_threads
-  }
-
-  # Task 2: Align FASTQ reads to the reference using bwa mem
+  # Task 1: Align FASTQ reads to the reference using bwa mem
   call align_reads {
     input:
       reference_fasta = reference_fasta,
       fastq_read1 = fastq_read1,
       fastq_read2 = fastq_read2,
-      bwa_index_amb = index_reference.reference_amb,
-      bwa_index_ann = index_reference.reference_ann,
-      bwa_index_bwt = index_reference.reference_bwt,
-      bwa_index_pac = index_reference.reference_pac,
-      bwa_index_sa = index_reference.reference_sa,
+      bwa_index_amb = bwa_index_amb,
+      bwa_index_ann = bwa_index_ann,
+      bwa_index_bwt = bwa_index_bwt,
+      bwa_index_pac = bwa_index_pac,
+      bwa_index_sa = bwa_index_sa,
       sample_name = sample_name,
       bwa_threads = bwa_threads
   }
-
-  # Task 3: Sort and index the aligned BAM file
-  call sort_and_index_bam {
-    input:
-      input_sam = align_reads.aligned_sam,
-      sample_name = sample_name,
-      samtools_threads = samtools_threads
-  }
-
-  output {
-    File sorted_bam = sort_and_index_bam.sorted_bam
-    File sorted_bam_index = sort_and_index_bam.sorted_bam_index
-  }
-}
-
-task index_reference {
-  input {
-    File reference_fasta
-    Int bwa_threads
-  }
-
-  command <<<
-    bwa index -p reference ~{reference_fasta}
-  >>>
-
-  output {
-    File reference_amb = "reference.fasta.amb"
-    File reference_ann = "reference.fasta.ann"
-    File reference_bwt = "reference.fasta.bwt"
-    File reference_pac = "reference.fasta.pac"
-    File reference_sa = "reference.fasta.sa"
-  }
-
-  runtime {
-    docker: "quay.io/biocontainers/bwa:0.7.19--h577a1d6_1"
-    cpu: bwa_threads
-  }
-}
 
 task align_reads {
   input {
@@ -101,25 +60,3 @@ task align_reads {
   }
 }
 
-task sort_and_index_bam {
-  input {
-    File input_sam
-    String sample_name
-    Int samtools_threads
-  }
-
-  command <<<
-    samtools sort -@ ~{samtools_threads} -O bam -o ~{sample_name}.sorted.bam ~{input_sam}
-    samtools index ~{sample_name}.sorted.bam
-  >>>
-
-  output {
-    File sorted_bam = "~{sample_name}.sorted.bam"
-    File sorted_bam_index = "~{sample_name}.sorted.bam.bai"
-  }
-
-  runtime {
-    docker: "quay.io/biocontainers/samtools:1.22.1--h96c455f_0"
-    cpu: samtools_threads
-  }
-}
