@@ -59,4 +59,4 @@ task align_reads {
     cpu: bwa_threads
   }
 }
-
+}
