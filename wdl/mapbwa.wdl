@@ -29,7 +29,7 @@ workflow map_fastq_to_reference {
       sample_name = sample_name,
       bwa_threads = bwa_threads
   }
-
+}
 task align_reads {
   input {
     File reference_fasta
@@ -59,4 +59,4 @@ task align_reads {
     cpu: bwa_threads
   }
 }
-}
+
