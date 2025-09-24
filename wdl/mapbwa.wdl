@@ -30,6 +30,7 @@ workflow map_fastq_to_reference {
       bwa_threads = bwa_threads
   }
 }
+
 task align_reads {
   input {
     File reference_fasta
